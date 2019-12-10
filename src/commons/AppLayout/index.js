@@ -37,7 +37,16 @@ export default function AppLayout({
               <Icon type="menu" />
             </Col>
             <Col span={22}>
-              <p style={{ width: "100%", textAlign: "center" }}>POKEMONPEDIA</p>
+              <p
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  color: "#2eac0d",
+                  fontWeight: "bold"
+                }}
+              >
+                POKEMONPEDIA
+              </p>
             </Col>
           </Row>
         </Header>
@@ -45,8 +54,7 @@ export default function AppLayout({
           style={{
             width: "100%",
             margin: "auto",
-            padding: 32,
-            height: 600
+            padding: 32
           }}
         >
           {children}
