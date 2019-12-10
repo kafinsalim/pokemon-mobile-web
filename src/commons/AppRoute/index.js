@@ -17,7 +17,7 @@ export default function index(): React.Node {
             <Route exact path="/">
               <Home />
             </Route>
-            <Route exact path="/detail/:id/:name">
+            <Route exact path="/detail/:id">
               <Detail />
             </Route>
             <Route exact path="/my-pokemon">
