@@ -1,87 +1,52 @@
 // @flow
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { Layout, Drawer, Icon, Row, Col } from "antd";
+import { Icon } from "antd-mobile";
 
 export default function AppLayout({
   children
 }: {
   children: React.Node
 }): React.Node {
-  const [drawerVisibility, setDrawerVisibility] = React.useState(false);
-  const { Header, Content } = Layout;
-
-  const showDrawer = (): Function => {
-    setDrawerVisibility(true);
-  };
-
-  const closeDrawer = (): Function => {
-    setDrawerVisibility(false);
-  };
-
   return (
     <div>
-      <Layout>
-        <Header
-          style={{
-            height: 64,
-            width: "100%",
-            paddingLeft: "8%",
-            paddingRight: "8%",
-            boxShadow: "1px 1px 4px #9E9E9E",
-            backgroundColor: "white"
-          }}
-        >
-          <Row>
-            <Col span={2} style={{ textAlign: "center" }} onClick={showDrawer}>
-              <Icon type="menu" />
-            </Col>
-            <Col span={22}>
-              <p
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                  color: "#2eac0d",
-                  fontWeight: "bold"
-                }}
-              >
-                POKEMONPEDIA
-              </p>
-            </Col>
-          </Row>
-        </Header>
-        <Content
-          style={{
-            width: "100%",
-            margin: "auto",
-            padding: 32
-          }}
-        >
-          {children}
-        </Content>
-      </Layout>
-      <Drawer
-        title="Menu"
-        placement="left"
-        closable
-        onClose={closeDrawer}
-        visible={drawerVisibility}
+      <div style={{ marginBottom: 54, overflow: "hidden" }}>{children}</div>
+      <div
+        style={{
+          position: "fixed",
+          width: "100%",
+          bottom: 0,
+          boxShadow: "0px -2px 6px 0px rgba(0,0,0,0.1)",
+          display: "flex",
+          backgroundColor: "white",
+          padding: 8
+        }}
       >
-        <Link to={"/"} onClick={closeDrawer}>
-          <span role="img" aria-label="home">
-            🏠
-          </span>
-          Home
+        <Link
+          to="/"
+          style={{
+            width: "50%",
+            height: 48,
+            textAlign: "center"
+          }}
+        >
+          <Icon type="search" size="md" />
+          <br />
+          Explore
         </Link>
-        <br />
-        <br />
-        <Link to={"/my-pokemon"} onClick={closeDrawer}>
-          <span role="img" aria-label="my-pokemon">
-            🐧
-          </span>
+        <Link
+          to="/my-pokemon"
+          style={{
+            width: "50%",
+            height: 48,
+            textAlign: "center"
+          }}
+        >
+          <Icon type="search" size="md" />
+          <br />
           My Pokemon
         </Link>
-      </Drawer>
+      </div>
     </div>
   );
 }
