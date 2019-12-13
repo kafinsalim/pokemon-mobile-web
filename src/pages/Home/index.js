@@ -1,20 +1,20 @@
 import * as React from "react";
 import axios from "axios";
-import { Card, List, ActivityIndicator, WhiteSpace } from "antd-mobile";
+import { useStoreState } from "easy-peasy";
+import { List, ActivityIndicator, Badge } from "antd-mobile";
 import { Link } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../utils";
-const Item = List.Item;
-const Brief = Item.Brief;
 
 export default function Home(): React.Node {
-  const [pokemons, setPokemons] = React.useState([]);
+  const [pokemonList, setPokemonList] = React.useState([]);
   const [fetchOffset, setFetchOffset] = React.useState(0);
   const [fetching, setFetching] = React.useState(false);
+  const { pokemons } = useStoreState(store => store.myPokemon);
   const limit = 10; // total pokemon per fetch
+  const Item = List.Item;
+  const Brief = Item.Brief;
 
-  function fetchMore() {
-    setFetchOffset(fetchOffset + limit);
-  }
+  const fetchMore = () => setFetchOffset(fetchOffset + limit);
 
   const handleScroll = React.useCallback(() => {
     const scrollTop: HTMLElement | number | null =
@@ -40,37 +40,38 @@ export default function Home(): React.Node {
   }, [handleScroll]);
 
   React.useEffect(() => {
-    function getPokemons() {
+    function getPokemonList() {
       setFetching(true);
       axios
         .get(
           `https://pokeapi.co/api/v2/pokemon/?offset=${fetchOffset}&limit=${limit}`
         )
         .then(response => {
-          setPokemons(
-            [...pokemons, ...response.data.results],
-            console.log(pokemons)
+          setPokemonList(
+            [...pokemonList, ...response.data.results],
+            console.log(pokemonList)
           );
           setFetching(false);
         });
     }
 
-    getPokemons();
+    getPokemonList();
   }, [fetchOffset]);
 
-  const pokemonOwned = 5;
-  // const pokemonImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index}.png`;
+  const pokemonOwned = pokemons.length;
+  const pokemonImage = id =>
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
   return (
     <div>
       <div style={{ padding: 16, textAlign: "center" }}>
-        Pokemon Owned : {pokemonOwned}
+        Pokemon Owned : <Badge text={pokemonOwned} />
         <br />
         <b>Go catch them all !</b>
       </div>
       <List>
-        {pokemons.map((pokemon, index) => {
+        {pokemonList.map((pokemon, index) => {
           const id = index + 1;
-          const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+          const image = pokemonImage(id);
           return (
             <Link to={`detail/${id}`} key={id}>
               <div

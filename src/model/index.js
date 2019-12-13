@@ -1,7 +1,7 @@
 import { action } from "easy-peasy";
 
 const myPokemon = {
-  pokemons: [{ pokemon: "bulbasaur", nickname: "bulby" }],
+  pokemons: [{ id: 1, pokemon: "bulbasaur", nickname: "bulby" }],
   catchPokemon: action((state, payload) => {
     // Object.assign(state.pokemons, { ...payload });
     state.pokemons.push(payload);

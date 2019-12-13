@@ -8,6 +8,8 @@ export default function AppLayout({
 }: {
   children: React.Node
 }): React.Node {
+  const [activeTab, setActiveTab] = React.useState(0);
+
   return (
     <div>
       <div style={{ marginBottom: 54, overflow: "hidden" }}>{children}</div>
@@ -27,8 +29,10 @@ export default function AppLayout({
           style={{
             width: "50%",
             height: 48,
-            textAlign: "center"
+            textAlign: "center",
+            color: activeTab === 0 ? "#2eac0d" : "#9F9F9F"
           }}
+          onClick={() => setActiveTab(0)}
         >
           <Icon type="search" size="md" />
           <br />
@@ -39,8 +43,10 @@ export default function AppLayout({
           style={{
             width: "50%",
             height: 48,
-            textAlign: "center"
+            textAlign: "center",
+            color: activeTab === 1 ? "#2eac0d" : "#9F9F9F"
           }}
+          onClick={() => setActiveTab(1)}
         >
           <Icon type="search" size="md" />
           <br />

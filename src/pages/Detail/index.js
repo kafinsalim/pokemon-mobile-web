@@ -1,15 +1,26 @@
 import * as React from "react";
-import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import { Card, Icon, Button, ActivityIndicator } from "antd-mobile";
-import { Modal } from "antd";
-import { capitalizeFirstLetter } from "../../utils";
+import { useParams, Link } from "react-router-dom";
+import { useStoreState, useStoreActions } from "easy-peasy";
+import { Card, Icon, Button, ActivityIndicator, Modal } from "antd-mobile";
+import { capitalizeFirstLetter, history } from "../../utils";
 
-export default function Detail(): React.Node {
+export default function Detail(props): React.Node {
+  console.log("props", props);
+  console.log("props", props);
   const [fetching, setFetching] = React.useState(false);
   const [data, setData] = React.useState({});
   const [imgHeight, setImgHeight] = React.useState(0);
-  const { id } = useParams();
+
+  const { myPokemon, catchRate } = useStoreState(state => state);
+  const catchRateAction = useStoreActions(action => action.catchRate);
+  const myPokemonAction = useStoreActions(action => action.myPokemon);
+
+  const { name, sprites, abilities, moves, types } = data;
+  const { pokemons } = myPokemon;
+  const { success, failed } = catchRate;
+  const { id } = useParams(); // used in many functs
+  const { prompt, alert } = Modal;
 
   React.useEffect(() => {
     async function getData() {
@@ -26,24 +37,43 @@ export default function Detail(): React.Node {
     getData();
   }, []);
 
-  console.log("rendering");
-
-  const handleCatch = ({ id, name }) => {
-    const catchResult = Math.random();
-    confirm({
-      title: `Catching ${name}`,
-      content:
-        catchResult > 0.5
-          ? `"GOT IT (${catchResult})`
-          : `TRY AGAIN (${catchResult})`,
-      onOk() {},
-      onCancel() {}
-    });
+  const handleCatch = () => {
+    const { success, failed } = catchRate;
+    const { catchSuccess, catchFailed } = catchRateAction;
+    console.log("data", data);
+    if (Math.random() >= 0.5) {
+      catchSuccess(success + 1);
+      prompt(
+        "You Got It !",
+        "give a nickname",
+        [
+          { text: "Release" },
+          {
+            text: "Catch",
+            onPress: value =>
+              handleTamePokemon({ id, pokemon: name, nickname: value }) // get name from state
+          }
+        ],
+        "default",
+        name
+      );
+    } else {
+      catchFailed(failed + 1);
+      prompt(`Oops ${name} too Strong`, "Try Again");
+      alert(`Oops ${name} too Strong`, "Try Again", [
+        { text: "Okay", onPress: () => {}, style: "default" }
+      ]);
+    }
   };
 
-  const { confirm } = Modal;
+  const handleTamePokemon = newPokemon => {
+    const { pokemons } = myPokemon;
+    const { catchPokemon } = myPokemonAction;
+    catchPokemon(newPokemon);
+    console.log(`cathed `, newPokemon);
+  };
 
-  const { name, sprites, abilities, moves, types } = data;
+  console.log("render", props, data);
 
   return (
     <div>
@@ -60,9 +90,11 @@ export default function Detail(): React.Node {
           fontWeight: "bold"
         }}
       >
+        {/* <a onClick={() => history.back()}> */}
         <Link to="/">
           <Icon type="left" style={{ flex: "0" }} />
         </Link>
+        {/* </a> */}
         <b
           style={{
             flex: "1",
@@ -115,7 +147,9 @@ export default function Detail(): React.Node {
           {moves && moves.map(({ move }) => ` ${move.name} `)}
         </p>
 
-        <Button onClick={() => handleCatch({ id, name })}>CATCH</Button>
+        <Button type="primary" onClick={handleCatch}>
+          CATCH
+        </Button>
         <br />
       </Card>
     </div>

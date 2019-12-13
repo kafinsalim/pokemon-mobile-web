@@ -2,6 +2,7 @@
 import * as React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Icon, ActivityIndicator } from "antd-mobile";
+import { createMemoryHistory } from "history";
 import AppLayout from "../AppLayout";
 
 const Home = React.lazy(() => import("../../pages/Home"));
@@ -23,7 +24,7 @@ const LoadingSpinner = () => (
 
 export default function index(): React.Node {
   return (
-    <Router>
+    <Router history={createMemoryHistory("/")}>
       <AppLayout>
         <React.Suspense fallback={<LoadingSpinner />}>
           <Switch>
