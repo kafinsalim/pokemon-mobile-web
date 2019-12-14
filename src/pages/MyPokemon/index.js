@@ -11,7 +11,7 @@ const { alert } = Modal;
 
 const Header = styled.div`
   width: 100%;
-  height: 42px;
+  height: 32px;
   padding-top: 12px;
   box-shadow: 1px 1px 4px #9e9e9e;
   background-color: white;

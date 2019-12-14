@@ -11,9 +11,9 @@ import LoadingScreen from "../../commons/LoadingScreen";
 const Header = styled.div`
   display: flex;
   width: 100%;
-  height: 42px;
-  padding-top: 12px;
-  padding-left: 32px;
+  height: 32px;
+  padding-left: 16px;
+  padding-top: 8px;
   box-shadow: 1px 1px 4px #9e9e9e;
   background-color: white;
   font-weight: bold;
@@ -22,7 +22,7 @@ const Header = styled.div`
 const Title = styled.b`
   flex: 1;
   text-align: center;
-  margin-right: 48px;
+  margin: 4px 48px auto auto;
 `;
 
 const Sprites = styled.div`
