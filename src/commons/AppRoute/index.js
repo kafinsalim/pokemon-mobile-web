@@ -1,7 +1,6 @@
 // @flow
 import * as React from "react";
-import { Router, Switch, Route, Link } from "react-router-dom";
-import { Icon, ActivityIndicator } from "antd-mobile";
+import { Router, Route } from "react-router-dom";
 import history from "../../utils/history";
 import AppLayout from "../AppLayout";
 import LoadingScreen from "../LoadingScreen";
