@@ -45,7 +45,7 @@ const Badge = styled.span`
     `};
 `;
 
-export default function Detail(props): React.Node {
+export default function Detail(props: Object): React.Node {
   const [fetching, setFetching] = React.useState(false);
   const [data, setData] = React.useState({});
   const { catchPokemon } = useStoreActions(action => action.myPokemon);
