@@ -83,7 +83,11 @@ export default function Detail(props): React.Node {
             {
               text: "Catch",
               onPress: value =>
-                catchPokemon({ id, pokemon: name, nickname: value }) // get name from state
+                catchPokemon({
+                  id,
+                  pokemon: name,
+                  nickname: value
+                }) // get name from state
             }
           ],
           "default",
