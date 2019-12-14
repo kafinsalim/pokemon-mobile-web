@@ -3,16 +3,49 @@ import axios from "axios";
 import { useStoreState } from "easy-peasy";
 import { List, ActivityIndicator, Badge } from "antd-mobile";
 import { Link } from "react-router-dom";
-import { capitalizeFirstLetter } from "../../utils";
+import styled from "styled-components";
+import { capitalizeFirstLetter, getPokemonImage } from "../../utils";
+
+const Item = List.Item;
+const Brief = Item.Brief;
+
+const Header = styled.div`
+  width: 100%;
+  height: 42px;
+  padding-top: 12px;
+  box-shadow: 1px 1px 4px #9e9e9e;
+  background-color: white;
+  text-align: center;
+  color: #2eac0d;
+  font-weight: bold;
+`;
+
+const ItemContainer = styled(Link)`
+  display: flex;
+`;
+
+const Center = styled.div`
+  width: 100%;
+  background-color: white;
+  padding: 16px;
+  margin-left: 35%;
+  margin-bottom: 16px;
+`;
+
+const ItemContent = styled(Item)`
+  border-top: 0.5px solid rgb(232, 232, 232);
+  width: 100%;
+`;
+
+const StyledImage = styled.img`
+  border-top: 0.5px solid rgb(232, 232, 232);
+`;
 
 export default function Home(): React.Node {
   const [pokemonList, setPokemonList] = React.useState([]);
   const [fetchOffset, setFetchOffset] = React.useState(0);
-  const [fetching, setFetching] = React.useState(false);
   const { pokemons } = useStoreState(store => store.myPokemon);
-  const limit = 10; // total pokemon per fetch
-  const Item = List.Item;
-  const Brief = Item.Brief;
+  const limit = 20; // total pokemon per fetch
 
   const fetchMore = () => setFetchOffset(fetchOffset + limit);
 
@@ -23,11 +56,6 @@ export default function Home(): React.Node {
       document.getElementById("root") &&
       document.getElementById("root").offsetHeight; // root Element
     const tabBarHeight = 54;
-    console.log(
-      `${window.innerHeight}+${scrollTop} = ${window.innerHeight +
-        scrollTop} x ${offsetHeight + tabBarHeight}`
-    );
-
     // do nothing if scrollY !reach bottom
     if (window.innerHeight + scrollTop !== offsetHeight + tabBarHeight) return;
     // else do
@@ -41,28 +69,23 @@ export default function Home(): React.Node {
 
   React.useEffect(() => {
     function getPokemonList() {
-      setFetching(true);
       axios
         .get(
           `https://pokeapi.co/api/v2/pokemon/?offset=${fetchOffset}&limit=${limit}`
         )
         .then(response => {
-          setPokemonList(
-            [...pokemonList, ...response.data.results],
-            console.log(pokemonList)
-          );
-          setFetching(false);
+          setPokemonList([...pokemonList, ...response.data.results]);
         });
     }
 
     getPokemonList();
   }, [fetchOffset]);
 
-  const pokemonOwned = pokemons.length;
-  const pokemonImage = id =>
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+  const pokemonOwned = pokemons.length.toString();
+
   return (
     <div>
+      <Header>POKEMONPEDIA</Header>
       <div style={{ padding: 16, textAlign: "center" }}>
         Pokemon Owned : <Badge text={pokemonOwned} />
         <br />
@@ -71,46 +94,19 @@ export default function Home(): React.Node {
       <List>
         {pokemonList.map((pokemon, index) => {
           const id = index + 1;
-          const image = pokemonImage(id);
           return (
-            <Link to={`detail/${id}`} key={id}>
-              <div
-                style={{
-                  display: "flex"
-                }}
-              >
-                <img
-                  src={image}
-                  onLoad={() => console.log("img ready")}
-                  alt={pokemon}
-                  style={{ borderTop: "0.5px solid rgb(232, 232, 232)" }}
-                />
-                <Item
-                  arrow="horizontal"
-                  style={{
-                    borderTop: "0.5px solid rgb(232, 232, 232)",
-                    width: "100%"
-                  }}
-                >
-                  {capitalizeFirstLetter(pokemon.name)}
-                  <Brief>#{id}</Brief>
-                </Item>
-              </div>
-            </Link>
+            <ItemContainer to={`detail/${id}`} key={id}>
+              <StyledImage src={getPokemonImage(id)} alt={pokemon} />
+              <ItemContent arrow="horizontal">
+                {capitalizeFirstLetter(pokemon.name)}
+                <Brief>#{id}</Brief>
+              </ItemContent>
+            </ItemContainer>
           );
         })}
-        <div
-          align="center"
-          style={{
-            width: "100%",
-            backgroundColor: "white",
-            padding: 16,
-            marginLeft: "32%",
-            marginBottom: 16
-          }}
-        >
+        <Center>
           <ActivityIndicator text="Loading..." />
-        </div>
+        </Center>
       </List>
     </div>
   );

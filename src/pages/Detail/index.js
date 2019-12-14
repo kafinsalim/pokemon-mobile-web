@@ -1,157 +1,168 @@
+// @flow
 import * as React from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
-import { useStoreState, useStoreActions } from "easy-peasy";
-import { Card, Icon, Button, ActivityIndicator, Modal } from "antd-mobile";
-import { capitalizeFirstLetter, history } from "../../utils";
+import { useParams } from "react-router-dom";
+import { useStoreActions } from "easy-peasy";
+import styled, { css } from "styled-components";
+import { Card, Icon, Button, Modal } from "antd-mobile";
+import { capitalizeFirstLetter, colorizeByType } from "../../utils";
+import LoadingScreen from "../../commons/LoadingScreen";
+
+const Header = styled.div`
+  display: flex;
+  width: 100%;
+  height: 42px;
+  padding-top: 12px;
+  padding-left: 32px;
+  box-shadow: 1px 1px 4px #9e9e9e;
+  background-color: white;
+  font-weight: bold;
+`;
+
+const Title = styled.b`
+  flex: 1;
+  text-align: center;
+  margin-right: 48px;
+`;
+
+const Sprites = styled.div`
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+`;
+
+const Badge = styled.span`
+  padding: 4px 6px;
+  margin: 6px 6px auto auto;
+  border-radius: 8px;
+  background-color: #a4acaf;
+  display: inline-block;
+  ${props =>
+    props.type &&
+    css`
+      background-color: ${colorizeByType(props.type)[0]};
+      color: ${colorizeByType(props.type)[1]};
+    `};
+`;
 
 export default function Detail(props): React.Node {
-  console.log("props", props);
-  console.log("props", props);
   const [fetching, setFetching] = React.useState(false);
   const [data, setData] = React.useState({});
-  const [imgHeight, setImgHeight] = React.useState(0);
+  const { catchPokemon } = useStoreActions(action => action.myPokemon);
 
-  const { myPokemon, catchRate } = useStoreState(state => state);
-  const catchRateAction = useStoreActions(action => action.catchRate);
-  const myPokemonAction = useStoreActions(action => action.myPokemon);
-
-  const { name, sprites, abilities, moves, types } = data;
-  const { pokemons } = myPokemon;
-  const { success, failed } = catchRate;
-  const { id } = useParams(); // used in many functs
+  const { name, sprites, abilities, moves, types, height, weight } = data;
+  const { id } = useParams();
   const { prompt, alert } = Modal;
 
+  // fetch data on initial mount
   React.useEffect(() => {
     async function getData() {
       setFetching(true);
       await axios
         .get(`https://pokeapi.co/api/v2/pokemon/${id}`)
         .then(response => {
-          console.log(response.data);
           setData(response.data);
           setFetching(false);
         });
     }
-    console.log("fetching");
     getData();
-  }, []);
+  }, [id]);
 
+  // process catch pokemon
   const handleCatch = () => {
-    const { success, failed } = catchRate;
-    const { catchSuccess, catchFailed } = catchRateAction;
-    console.log("data", data);
-    if (Math.random() >= 0.5) {
-      catchSuccess(success + 1);
-      prompt(
-        "You Got It !",
-        "give a nickname",
-        [
-          { text: "Release" },
-          {
-            text: "Catch",
-            onPress: value =>
-              handleTamePokemon({ id, pokemon: name, nickname: value }) // get name from state
-          }
-        ],
-        "default",
-        name
-      );
-    } else {
-      catchFailed(failed + 1);
-      prompt(`Oops ${name} too Strong`, "Try Again");
-      alert(`Oops ${name} too Strong`, "Try Again", [
-        { text: "Okay", onPress: () => {}, style: "default" }
-      ]);
-    }
+    setFetching(true);
+    setTimeout(function() {
+      // give some loading animation
+      setFetching(false);
+      if (Math.random() >= 0.5) {
+        prompt(
+          "You Got It !",
+          "give a nickname",
+          [
+            { text: "Release" },
+            {
+              text: "Catch",
+              onPress: value =>
+                catchPokemon({ id, pokemon: name, nickname: value }) // get name from state
+            }
+          ],
+          "default",
+          name
+        );
+      } else {
+        alert(`Oops ${name} too strong`, "Try Again", [{ text: "Okay" }]);
+      }
+    }, 750);
   };
-
-  const handleTamePokemon = newPokemon => {
-    const { pokemons } = myPokemon;
-    const { catchPokemon } = myPokemonAction;
-    catchPokemon(newPokemon);
-    console.log(`cathed `, newPokemon);
-  };
-
-  console.log("render", props, data);
-
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          height: 42,
-          paddingTop: 12,
-          paddingLeft: 32,
-          boxShadow: "1px 1px 4px #9E9E9E",
-          backgroundColor: "white",
-          // color: "#2eac0d",
-          fontWeight: "bold"
-        }}
-      >
-        {/* <a onClick={() => history.back()}> */}
-        <Link to="/">
+    <>
+      <Header>
+        <a to="/" onClick={() => props.history.goBack()} href>
           <Icon type="left" style={{ flex: "0" }} />
-        </Link>
-        {/* </a> */}
-        <b
-          style={{
-            flex: "1",
-            textAlign: "center",
-            marginRight: 48
-          }}
-        >
-          {name && capitalizeFirstLetter(name)}
-        </b>
-      </div>
+        </a>
+        <Title>{name && capitalizeFirstLetter(name)}</Title>
+      </Header>
       {fetching ? (
-        <ActivityIndicator
-          text="Loading..."
-          style={{ width: "50%", padding: "25%" }}
-        />
+        <LoadingScreen />
       ) : (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            flexWrap: "wrap"
-          }}
-        >
-          {sprites &&
-            Object.keys(sprites).map((uri, index) => (
-              <img
-                key={index}
-                alt={sprites[uri]}
-                src={sprites[uri]}
-                style={{
-                  width: "25%",
-                  flex: "0.25 1"
-                }}
-              />
-            ))}
-        </div>
-      )}
-      <Card style={{ padding: 16 }}>
-        <h4>#{id}</h4>
-        <p>
-          Types:
-          {types && types.map(({ type }) => ` ${type.name} `)}
-        </p>
-        <p>
-          Abilities:
-          {abilities && abilities.map(({ ability }) => ` ${ability.name} `)}
-        </p>
-        <p>
-          Moves:
-          {moves && moves.map(({ move }) => ` ${move.name} `)}
-        </p>
+        <>
+          <Sprites>
+            {sprites &&
+              Object.keys(sprites).map((uri, index) => (
+                <img
+                  key={index}
+                  alt={sprites[uri]}
+                  src={sprites[uri]}
+                  style={{
+                    width: "25%",
+                    flex: "0.25 1"
+                  }}
+                />
+              ))}
+          </Sprites>
+          <Card style={{ padding: 24 }}>
+            <h3>#{id}</h3>
+            <p>
+              <b>Height : </b>
+              {height}
+              <span style={{ marginLeft: "25%" }}>
+                <b>Weight : </b>
+                {weight}
+              </span>
+            </p>
+            <p>
+              <b>Types :</b>
+              <br />
+              {types &&
+                types.map(({ type }) => (
+                  <Badge key={type.name} type={type.name}>
+                    {type.name}
+                  </Badge>
+                ))}
+            </p>
+            <p>
+              <b>Abilities :</b>
+              <br />
+              {abilities &&
+                abilities.map(({ ability }) => (
+                  <Badge key={ability.name}>{ability.name}</Badge>
+                ))}
+            </p>
+            <p>
+              <b>Moves :</b>
+              <br />
+              {moves &&
+                moves.map(({ move }) => (
+                  <Badge key={move.name}>{move.name}</Badge>
+                ))}
+            </p>
 
-        <Button type="primary" onClick={handleCatch}>
-          CATCH
-        </Button>
-        <br />
-      </Card>
-    </div>
+            <Button type="primary" onClick={handleCatch}>
+              CATCH
+            </Button>
+          </Card>
+        </>
+      )}
+    </>
   );
 }

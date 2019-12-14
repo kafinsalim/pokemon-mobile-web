@@ -1,23 +1,17 @@
 import { action } from "easy-peasy";
 
 const myPokemon = {
-  pokemons: [{ id: 1, pokemon: "bulbasaur", nickname: "bulby" }],
+  pokemons: [],
   catchPokemon: action((state, payload) => {
-    // Object.assign(state.pokemons, { ...payload });
     state.pokemons.push(payload);
-  })
-  // ownedTotal: computed(state => Object.values(state.pokemons).length)
-};
-
-const catchRate = {
-  success: 0,
-  failed: 0,
-  catchSuccess: action((state, payload) => {
-    state.success = payload;
   }),
-  catchFailed: action((state, payload) => {
-    state.failed = payload;
+  releasePokemon: action(async (state, payload) => {
+    console.log("releasePokemon", payload);
+    // release pokemon by its nickname
+    const { pokemons } = state;
+    const index = pokemons.findIndex(pokemon => pokemon.nickname === payload);
+    if (index >= 0) pokemons.splice(index, 1);
   })
 };
 
-export default { myPokemon, catchRate };
+export default { myPokemon };
