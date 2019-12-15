@@ -25,9 +25,7 @@ const Title = styled.b`
 `;
 
 const Sprites = styled.div`
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  text-align: center;
 `;
 
 const Badge = styled.span`
@@ -112,15 +110,7 @@ export default function Detail(props: Object): React.Node {
           <Sprites>
             {sprites &&
               Object.keys(sprites).map((uri, index) => (
-                <img
-                  key={index}
-                  alt={sprites[uri]}
-                  src={sprites[uri]}
-                  style={{
-                    width: "25%",
-                    flex: "0.25 1"
-                  }}
-                />
+                <img key={index} alt={sprites[uri]} src={sprites[uri]} />
               ))}
           </Sprites>
           <Card style={{ padding: 24 }}>
