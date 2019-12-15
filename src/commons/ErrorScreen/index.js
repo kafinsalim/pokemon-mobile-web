@@ -4,10 +4,8 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const Centered = styled.div`
-  height: 100%;
-  width: 100%;
   text-align: center;
-  margin-top: 15%;
+  margin-top: 35vh;
 `;
 
 export default (): React.Node => (

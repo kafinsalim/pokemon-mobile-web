@@ -25,11 +25,12 @@ const ItemContainer = styled(Link)`
 `;
 
 const Center = styled.div`
-  width: 100%;
+  display: flex;
+  justify-content: center;
   background-color: white;
+  border-top: 0.5px solid rgb(232, 232, 232);
   padding: 16px;
-  margin-left: 35%;
-  margin-bottom: 16px;
+  margin: 16px auto;
 `;
 
 const ItemContent = styled(Item)`
@@ -47,8 +48,6 @@ export default function Home(): React.Node {
   const { pokemons } = useStoreState(store => store.myPokemon);
   const limit = 20; // total pokemon per fetch
 
-  const fetchMore = () => setFetchOffset(fetchOffset + limit);
-
   const handleScroll = React.useCallback(() => {
     const scrollTop: HTMLElement | number | null =
       document.documentElement && document.documentElement.scrollTop; // html Element
@@ -59,8 +58,8 @@ export default function Home(): React.Node {
     // do nothing if scrollY !reach bottom
     if (window.innerHeight + scrollTop !== offsetHeight + tabBarHeight) return;
     // else do
-    fetchMore(); // TODO: throttle fetching
-  }, [fetchMore]);
+    setFetchOffset(fetchOffset + limit); // TODO: throttle fetching
+  }, [fetchOffset]);
 
   React.useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -74,7 +73,7 @@ export default function Home(): React.Node {
           `https://pokeapi.co/api/v2/pokemon/?offset=${fetchOffset}&limit=${limit}`
         )
         .then(response => {
-          setPokemonList([...pokemonList, ...response.data.results]);
+          setPokemonList(pokemons => [...pokemons, ...response.data.results]);
         });
     }
 

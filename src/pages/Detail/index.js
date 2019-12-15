@@ -1,12 +1,11 @@
 // @flow
 import * as React from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useStoreActions } from "easy-peasy";
 import styled, { css } from "styled-components";
-import { Card, Icon, Button, Modal } from "antd-mobile";
+import { Card, Icon, Button, Modal, ActivityIndicator } from "antd-mobile";
 import { capitalizeFirstLetter, colorizeByType } from "../../utils";
-import LoadingScreen from "../../commons/LoadingScreen";
 
 const Header = styled.div`
   display: flex;
@@ -94,20 +93,20 @@ export default function Detail(props: Object): React.Node {
           name
         );
       } else {
-        alert(`Oops ${name} too strong`, "Try Again", [{ text: "Okay" }]);
+        alert("Oops", `${name} too strong`, [{ text: "Try Again" }]);
       }
     }, 750);
   };
   return (
     <>
       <Header>
-        <a to="/" onClick={() => props.history.goBack()} href>
-          <Icon type="left" style={{ flex: "0" }} />
-        </a>
+        <Link to="/">
+          <Icon type="left" />
+        </Link>
         <Title>{name && capitalizeFirstLetter(name)}</Title>
       </Header>
       {fetching ? (
-        <LoadingScreen />
+        <ActivityIndicator toast text="Please Wait..." animating />
       ) : (
         <>
           <Sprites>

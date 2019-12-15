@@ -1,9 +1,8 @@
 // @flow
 import * as React from "react";
-import { Router, Route, Switch } from "react-router-dom";
-import history from "../../utils/history";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import AppLayout from "../AppLayout";
-import LoadingScreen from "../LoadingScreen";
+import { ActivityIndicator } from "antd-mobile";
 
 const Home = React.lazy(() => import("../../pages/Home"));
 const Detail = React.lazy(() => import("../../pages/Detail"));
@@ -12,9 +11,11 @@ const ErrorScreen = React.lazy(() => import("../ErrorScreen"));
 
 export default function index(): React.Node {
   return (
-    <Router history={history}>
+    <BrowserRouter>
       <AppLayout>
-        <React.Suspense fallback={<LoadingScreen />}>
+        <React.Suspense
+          fallback={<ActivityIndicator toast text="Please Wait..." animating />}
+        >
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/detail/:id" component={Detail} />
@@ -23,6 +24,6 @@ export default function index(): React.Node {
           </Switch>
         </React.Suspense>
       </AppLayout>
-    </Router>
+    </BrowserRouter>
   );
 }

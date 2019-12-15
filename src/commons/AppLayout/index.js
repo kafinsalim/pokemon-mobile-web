@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Icon } from "antd-mobile";
 import styled, { css } from "styled-components";
 
@@ -17,6 +17,7 @@ const TabContainer = styled.div`
   display: flex;
   background-color: white;
   padding: 8px;
+  z-index: 100;
 `;
 
 const TabItem = styled(Link)`
@@ -31,20 +32,20 @@ const TabItem = styled(Link)`
     `}
 `;
 
-export default function AppLayout({
-  children
-}: {
-  children: React.Node
-}): React.Node {
+function AppLayout(props: Object): React.Node {
   const [activeTab, setActiveTab] = React.useState(0);
+
+  // handle if path my-pokemon accessed manually
+  const isMyPokemon = props.location.pathname === "/my-pokemon" ? 1 : 0;
+  if (isMyPokemon && activeTab === 0) setActiveTab(1);
 
   return (
     <>
-      <Content>{children}</Content>
+      <Content>{props.children}</Content>
       <TabContainer>
         <TabItem
           to="/"
-          active={activeTab === 0}
+          active={activeTab === 0 ? 1 : 0}
           onClick={() => setActiveTab(0)}
         >
           <Icon type="search" size="md" />
@@ -53,7 +54,7 @@ export default function AppLayout({
         </TabItem>
         <TabItem
           to="/my-pokemon"
-          active={activeTab === 1}
+          active={activeTab === 1 ? 1 : 0}
           onClick={() => setActiveTab(1)}
         >
           <Icon type="check-circle-o" size="md" />
@@ -64,3 +65,5 @@ export default function AppLayout({
     </>
   );
 }
+
+export default withRouter(AppLayout);

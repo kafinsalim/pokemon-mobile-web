@@ -6,7 +6,6 @@ const myPokemon = {
     state.pokemons.push(payload);
   }),
   releasePokemon: action(async (state, payload) => {
-    console.log("releasePokemon", payload);
     // release pokemon by its nickname
     const { pokemons } = state;
     const index = pokemons.findIndex(pokemon => pokemon.nickname === payload);
