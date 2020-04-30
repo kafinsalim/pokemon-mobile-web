@@ -6,10 +6,10 @@ You can access live projects here:
 
 - [https://pokemonpedia.now.sh/](https://pokemonpedia.now.sh/)
 
-## Packages Used
+## Library Used
 
-- React
-- Styled Component
+- React ⚛️
+- Styled Component 💅
 - Easy Peasy (for global state management)
 
 ## Available Scripts
