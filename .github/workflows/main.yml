@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Action Cats
         uses: ruairidhwm/action-cats@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v1
       - name: Run a one-line script
         run: echo Hello, world!
