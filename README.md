@@ -1,4 +1,4 @@
-Another Pokedex web app with Mobile First experience.
+Another Pokedex web app with priority in mobile web experience
 
 ## Live
 
