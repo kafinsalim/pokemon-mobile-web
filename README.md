@@ -9,7 +9,7 @@ You can access live projects here:
 ## Library Used
 
 - React ⚛️
-- Styled Component
+- Styled Component 💅
 - Easy Peasy (for global state management)
 
 ## Available Scripts
