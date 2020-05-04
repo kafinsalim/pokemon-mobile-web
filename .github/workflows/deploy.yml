@@ -1,4 +1,4 @@
-name: Heroku CI
+name: deploy
 
 on:
   push:
