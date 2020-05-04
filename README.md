@@ -1,9 +1,12 @@
 Another Pokedex web app with priority in mobile web experience
 
 ## Live
-
+ 
+ ![Heroku CI](https://github.com/kafinsalim/pokemonpedia/workflows/Heroku%20CI/badge.svg)
+ 
 You can access live projects here:
 
+- [https://m-pokemonpedia.herokuapp.com/](https://m-pokemonpedia.herokuapp.com/)
 - [https://pokemonpedia.now.sh/](https://pokemonpedia.now.sh/)
 
 ## Library Used
