@@ -95,6 +95,7 @@ export default function Detail(props: Object): React.Node {
       }
     }, 750);
   };
+
   return (
     <>
       <Header>
