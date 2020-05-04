@@ -2,7 +2,7 @@ Another Pokedex web app with priority in mobile web experience
 
 ## Live
  
- ![test](https://github.com/kafinsalim/pokemonpedia/workflows/test/badge.svg) ![build](https://github.com/kafinsalim/pokemonpedia/workflows/build/badge.svg) ![deploy](https://github.com/kafinsalim/pokemonpedia/workflows/Heroku%20CI/badge.svg)
+ ![test](https://github.com/kafinsalim/pokemonpedia/workflows/test/badge.svg) ![build](https://github.com/kafinsalim/pokemonpedia/workflows/build/badge.svg) ![deploy](https://github.com/kafinsalim/pokemonpedia/workflows/deploy/badge.svg)
  
 You can access live projects here:
 
